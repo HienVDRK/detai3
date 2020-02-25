@@ -19,7 +19,7 @@ class Search extends Component {
      }
 
      onSubmit = (event) => {
-        event.preventDefault();
+        event.preventDefault()
         this.searchFilms()
     }
     

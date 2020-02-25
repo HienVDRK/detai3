@@ -5,53 +5,55 @@ import { getDetailFilmsById } from '../src/service/service'
 
 function Detail(props) {
   let btnBookmark
-  const getBookmarkLocalStorage = JSON.parse(localStorage.getItem("BookmarkFilms"))
-  let objFilms
+  if (typeof localStorage !== 'undefined') {
+    const getBookmarkLocalStorage = JSON.parse(localStorage.getItem("BookmarkFilms"))
+    let objFilms
 
-  function addBookmark() {
-    if (JSON.parse(localStorage.getItem("BookmarkFilms")) === null) {
-      objFilms = [];
+    function addBookmark() {
+      if (JSON.parse(localStorage.getItem("BookmarkFilms")) === null) {
+        objFilms = [];
+      } else {
+        objFilms = JSON.parse(localStorage.getItem("BookmarkFilms"))
+      }
+
+      if (objFilms && objFilms.some(film => film.imdbID === props.data.imdbID)) {
+        alert(`Phim ${props.data.Title} đã bookmark rồi!`)
+      }
+      else {
+        objFilms.push({
+          imdbID: props.data.imdbID,
+          Title: props.data.Title,
+          Poster: props.data.Poster,
+          Year: props.data.Year,
+          Type: props.data.Type
+        });
+        localStorage.setItem("BookmarkFilms", JSON.stringify(objFilms))
+        alert(`Thêm bookmark ${props.data.Title} thành công!`)
+      }
+    }
+
+    function removeBookmark() {
+      const index = getBookmarkLocalStorage.findIndex(film => film.imdbID == props.data.imdbID)
+      getBookmarkLocalStorage.splice(index, 1)
+      localStorage.setItem('BookmarkFilms', JSON.stringify(getBookmarkLocalStorage));
+      alert(`Xóa bookmark ${props.data.Title} thành công!`)
+    }
+
+    if (getBookmarkLocalStorage && getBookmarkLocalStorage.some(film => film.imdbID === props.data.imdbID)) {
+      btnBookmark = (
+        <div>
+          <button type="button" onClick={removeBookmark} className="btn btn-danger">Xóa Bookmark</button><br /><br />
+        </div>
+      )
     } else {
-      objFilms = JSON.parse(localStorage.getItem("BookmarkFilms"))
-    }
-    
-    if (objFilms && objFilms.some(film => film.imdbID === props.data.imdbID)) {
-      alert(`Phim ${props.data.Title} đã bookmark rồi!`)
-    }
-    else {
-      objFilms.push({
-        imdbID: props.data.imdbID,
-        Title: props.data.Title,
-        Poster: props.data.Poster,
-        Year: props.data.Year,
-        Type: props.data.Type
-      });
-      localStorage.setItem("BookmarkFilms", JSON.stringify(objFilms))
-      alert(`Thêm bookmark ${props.data.Title} thành công!`)
+      btnBookmark = (
+        <div>
+          <button type="button" onClick={addBookmark} className="btn btn-success">Thêm Bookmark</button><br /><br />
+        </div>
+      )
     }
   }
-
-  function removeBookmark() {
-    const index = getBookmarkLocalStorage.findIndex(film => film.imdbID == props.data.imdbID);
-    getBookmarkLocalStorage.splice(index, 1)
-    localStorage.setItem('BookmarkFilms', JSON.stringify(getBookmarkLocalStorage));
-    alert(`Xóa bookmark ${props.data.Title} thành công!`)
-  }
-
-  if (getBookmarkLocalStorage && getBookmarkLocalStorage.some(film => film.imdbID === props.data.imdbID)) {
-    btnBookmark = (
-      <div>
-        <button type="button" onClick={removeBookmark} className="btn btn-danger">Xóa Bookmark</button><br /><br />
-      </div>
-    )
-  }
-  else {
-    btnBookmark = (
-      <div>
-        <button type="button" onClick={addBookmark} className="btn btn-success">Thêm Bookmark</button><br /><br />
-      </div>
-    )
-  }
+  
 
   return (
     <Layout>
