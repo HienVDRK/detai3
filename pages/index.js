@@ -1,9 +1,13 @@
 import Link from 'next/link'
+import getConfig from 'next/config'
 import Layout from '../src/layouts/DefaultLayout'
 import { getFilmsByTitle } from '../src/service/service'
 import ListFilm from '../src/components/ListFilms'
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 function Index (props) {
+  console.log('serverRuntimeConfig--------', serverRuntimeConfig.KEY)
+  console.log('publicRuntimeConfig---------', publicRuntimeConfig.staticFolder)
   return (
     <Layout>
       <h1 className='text-center'>
@@ -21,7 +25,7 @@ function Index (props) {
       </div>
       <div className='row'>
         {props.data.Search.map((value, index) => (
-          <ListFilm value={value} key={process.env.key} />
+          <ListFilm value={value} key={index} />
         ))}
       </div>
     </Layout>
