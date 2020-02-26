@@ -6,7 +6,7 @@ import ListFilm from '../src/components/ListFilms'
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 function Index (props) {
-  console.log('serverRuntimeConfig--------', serverRuntimeConfig.KEY)
+  // console.log('serverRuntimeConfig--------', serverRuntimeConfig.KEY)
   // console.log('publicRuntimeConfig---------', publicRuntimeConfig.staticFolder)
   return (
     <Layout>
