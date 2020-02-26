@@ -1,72 +1,79 @@
 import Link from 'next/link'
 import Layout from '../src/layouts/DefaultLayout'
-import styles from '../src/styles/styles.module.css'
+import styles from '../src/styles/detail.module.css'
 import { getDetailFilmsById } from '../src/service/service'
+import Cookies from 'universal-cookie'
 
-function Detail(props) {
+function Detail (props) {
+  const cookies = new Cookies()
   let btnBookmark
-  if (typeof localStorage !== 'undefined') {
-    const getBookmarkLocalStorage = JSON.parse(localStorage.getItem("BookmarkFilms"))
-    let objFilms
+  let bookmarkFilm
 
-    function addBookmark() {
-      if (JSON.parse(localStorage.getItem("BookmarkFilms")) === null) {
-        objFilms = [];
-      } else {
-        objFilms = JSON.parse(localStorage.getItem("BookmarkFilms"))
-      }
-
-      if (objFilms && objFilms.some(film => film.imdbID === props.data.imdbID)) {
-        alert(`Phim ${props.data.Title} đã bookmark rồi!`)
-      }
-      else {
-        objFilms.push({
-          imdbID: props.data.imdbID,
-          Title: props.data.Title,
-          Poster: props.data.Poster,
-          Year: props.data.Year,
-          Type: props.data.Type
-        });
-        localStorage.setItem("BookmarkFilms", JSON.stringify(objFilms))
-        alert(`Thêm bookmark ${props.data.Title} thành công!`)
-      }
-    }
-
-    function removeBookmark() {
-      const index = getBookmarkLocalStorage.findIndex(film => film.imdbID == props.data.imdbID)
-      getBookmarkLocalStorage.splice(index, 1)
-      localStorage.setItem('BookmarkFilms', JSON.stringify(getBookmarkLocalStorage));
-      alert(`Xóa bookmark ${props.data.Title} thành công!`)
-    }
-
-    if (getBookmarkLocalStorage && getBookmarkLocalStorage.some(film => film.imdbID === props.data.imdbID)) {
-      btnBookmark = (
-        <div>
-          <button type="button" onClick={removeBookmark} className="btn btn-danger">Xóa Bookmark</button><br /><br />
-        </div>
-      )
+  const addBookmark = function () {
+    if (cookies.get('bookmark') === undefined) {
+      bookmarkFilm = []
     } else {
-      btnBookmark = (
-        <div>
-          <button type="button" onClick={addBookmark} className="btn btn-success">Thêm Bookmark</button><br /><br />
-        </div>
-      )
+      bookmarkFilm = cookies.get('bookmark')
     }
-  }
-  
+    bookmarkFilm.push({
+      imdbID: props.data.imdbID,
+      Title: props.data.Title,
+      Poster: props.data.Poster,
+      Year: props.data.Year,
+      Type: props.data.Type
+    })
+    console.log('objFilms', bookmarkFilm)
+    const jsonStr = JSON.stringify(bookmarkFilm)
+    cookies.set('bookmark', jsonStr, { path: '/' })
+    console.log('bookmark', cookies.get('bookmark'))
 
+    window.alert(`Thêm bookmark ${props.data.Title} thành công!`)
+
+    // if (objFilms && objFilms.some(film => film.imdbID === props.data.imdbID)) {
+    //   window.alert(`Phim ${props.data.Title} đã bookmark rồi!`)
+    // } else {
+    //   objFilms.push({
+    //     imdbID: props.data.imdbID,
+    //     Title: props.data.Title,
+    //     Poster: props.data.Poster,
+    //     Year: props.data.Year,
+    //     Type: props.data.Type
+    //   })
+    //   window.localStorage.setItem('BookmarkFilms', JSON.stringify(objFilms))
+    // }
+  }
+
+  const removeBookmark = function () {
+    // const index = cookies.get('bookmark').findIndex(film => film.imdbID === props.data.imdbID)
+    // cookies.get('bookmark').splice(index, 1)
+    window.alert(`Xóa bookmark ${props.data.Title} thành công!`)
+  }
+
+  if (cookies.get('bookmark') && cookies.get('bookmark').some(film => film.imdbID === props.data.imdbID)) {
+    btnBookmark = (
+      <div>
+        <button type='button' onClick={removeBookmark} className='btn btn-danger'>Xóa Bookmark</button><br /><br />
+      </div>
+    )
+  } else {
+    btnBookmark = (
+      <div>
+        <button type='button' onClick={addBookmark} className='btn btn-success'>Thêm Bookmark</button><br /><br />
+      </div>
+    )
+  }
   return (
     <Layout>
-      <h1 className="text-center">
+      <h1 className='text-center'>
         Trang chi tiết bộ phim
-        </h1>
+      </h1>
       <hr />
       {btnBookmark}
-      <div className="row">
-        <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-          <img src={props.data.Poster} className="img-responsive" />
+      <div className='row'>
+        <div className='col-xs-4 col-sm-4 col-md-4 col-lg-4'>
+          <img src={props.data.Poster} className='img-responsive' />
         </div>
-        <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+        <div className='col-xs-8 col-sm-8 col-md-8 col-lg-8'>
           <span className={styles.info_films}>ID IMDB : {props.data.imdbID}</span><br />
           <span className={styles.info_films}>Title : {props.data.Title}</span><br />
           <span className={styles.info_films}>Released : {props.data.Released}</span><br />
@@ -83,18 +90,17 @@ function Detail(props) {
       <br />
       <hr />
       <Link href='/search'>
-        <button type="button" className="btn btn-primary">Quay lại trang tìm kiếm</button>
+        <button type='button' className='btn btn-primary'>Quay lại trang tìm kiếm</button>
       </Link>
     </Layout>
   )
 }
 
 Detail.getInitialProps = async (props) => {
-  let getFilms = await getDetailFilmsById(props.query.idFilm)
+  const getFilms = await getDetailFilmsById(props.query.idFilm)
   return {
     data: getFilms
   }
 }
-
 
 export default Detail

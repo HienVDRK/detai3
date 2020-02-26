@@ -1,0 +1,15 @@
+.poster{
+    height: 350px;
+    width: 250px;
+    cursor: pointer
+}
+.titleFilm{
+    cursor: pointer;
+    font-weight: bold
+}
+.infoFilm{
+    height: 490px
+}
+.textFilm{
+    height: 100px
+}
