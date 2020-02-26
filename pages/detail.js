@@ -15,37 +15,28 @@ function Detail (props) {
     } else {
       bookmarkFilm = cookies.get('bookmark')
     }
-    bookmarkFilm.push({
-      imdbID: props.data.imdbID,
-      Title: props.data.Title,
-      Poster: props.data.Poster,
-      Year: props.data.Year,
-      Type: props.data.Type
-    })
-    console.log('objFilms', bookmarkFilm)
-    const jsonStr = JSON.stringify(bookmarkFilm)
-    cookies.set('bookmark', jsonStr, { path: '/' })
-    console.log('bookmark', cookies.get('bookmark'))
-
-    window.alert(`Thêm bookmark ${props.data.Title} thành công!`)
-
-    // if (objFilms && objFilms.some(film => film.imdbID === props.data.imdbID)) {
-    //   window.alert(`Phim ${props.data.Title} đã bookmark rồi!`)
-    // } else {
-    //   objFilms.push({
-    //     imdbID: props.data.imdbID,
-    //     Title: props.data.Title,
-    //     Poster: props.data.Poster,
-    //     Year: props.data.Year,
-    //     Type: props.data.Type
-    //   })
-    //   window.localStorage.setItem('BookmarkFilms', JSON.stringify(objFilms))
-    // }
+    if (bookmarkFilm && bookmarkFilm.some(film => film.imdbID === props.data.imdbID)) {
+      window.alert(`Phim ${props.data.Title} đã bookmark rồi!`)
+    } else {
+      bookmarkFilm.push({
+        imdbID: props.data.imdbID,
+        Title: props.data.Title,
+        Poster: props.data.Poster,
+        Year: props.data.Year,
+        Type: props.data.Type
+      })
+      const jsonStr = JSON.stringify(bookmarkFilm)
+      cookies.set('bookmark', jsonStr, { path: '/' })
+      window.alert(`Thêm bookmark ${props.data.Title} thành công!`)
+    }
   }
 
   const removeBookmark = function () {
-    // const index = cookies.get('bookmark').findIndex(film => film.imdbID === props.data.imdbID)
-    // cookies.get('bookmark').splice(index, 1)
+    const getBookmarkFilm = cookies.get('bookmark')
+    const index = getBookmarkFilm.findIndex(film => film.imdbID === props.data.imdbID)
+    getBookmarkFilm.splice(index, 1)
+    const jsonStr = JSON.stringify(getBookmarkFilm)
+    cookies.set('bookmark', jsonStr)
     window.alert(`Xóa bookmark ${props.data.Title} thành công!`)
   }
 
