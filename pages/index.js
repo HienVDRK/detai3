@@ -7,7 +7,7 @@ const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 function Index (props) {
   console.log('serverRuntimeConfig--------', serverRuntimeConfig.KEY)
-  console.log('publicRuntimeConfig---------', publicRuntimeConfig.staticFolder)
+  // console.log('publicRuntimeConfig---------', publicRuntimeConfig.staticFolder)
   return (
     <Layout>
       <h1 className='text-center'>
