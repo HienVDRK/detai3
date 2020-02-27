@@ -1,7 +1,9 @@
 
 import axios from 'axios'
 import getConfig from 'next/config'
-const { publicRuntimeConfig } = getConfig()
+const { publicRuntimeConfig = {} } = getConfig() || {}
+// console.log('publicRuntimeConfig-----', publicRuntimeConfig.APIKEY)
+// console.log('serverRuntimeConfig-----', serverRuntimeConfig.KEY)
 
 export const getFilmsByTitle = async (keyWord) => {
   const response = await axios.get(`https://www.omdbapi.com/?s=${keyWord}&apikey=${publicRuntimeConfig.APIKEY}`)
