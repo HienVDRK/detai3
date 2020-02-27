@@ -5,6 +5,7 @@ module.exports = {
     KEY: process.env.KEY
   },
   publicRuntimeConfig: {
-    staticFolder: '/static'
+    staticFolder: '/static',
+    APIKEY: process.env.APIKEY
   }
 }

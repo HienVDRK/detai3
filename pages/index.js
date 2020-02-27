@@ -1,13 +1,13 @@
 import Link from 'next/link'
-import getConfig from 'next/config'
+// import getConfig from 'next/config'
 import Layout from '../src/layouts/DefaultLayout'
 import { getFilmsByTitle } from '../src/service/service'
 import ListFilm from '../src/components/ListFilms'
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
+// const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
 
 function Index (props) {
-  // console.log('serverRuntimeConfig--------', serverRuntimeConfig.KEY)
-  // console.log('publicRuntimeConfig---------', publicRuntimeConfig.staticFolder)
+  // console.log('serverRuntimeConfig--------', serverRuntimeConfig.APIKEY)
+  // console.log('publicRuntimeConfig---------', publicRuntimeConfig.APIKEY)
   return (
     <Layout>
       <h1 className='text-center'>
