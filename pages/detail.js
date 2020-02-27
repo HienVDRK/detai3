@@ -87,8 +87,8 @@ function Detail (props) {
   )
 }
 
-Detail.getInitialProps = async (props) => {
-  const getFilms = await getDetailFilmsById(props.query.idFilm)
+Detail.getInitialProps = async ({ query: { idFilm } }) => {
+  const getFilms = await getDetailFilmsById(idFilm)
   return {
     data: getFilms
   }
