@@ -1,6 +1,7 @@
 import Layout from '../src/layouts/DefaultLayout'
 import ListFilm from '../src/components/ListFilms'
 import Cookies from 'universal-cookie'
+import Helmet from 'react-helmet'
 
 function Bookmark () {
   const cookies = new Cookies()
@@ -31,15 +32,17 @@ function Bookmark () {
   }
 
   return (
-    <div className='container'>
-      <Layout>
-        <h1 className='text-center'>
-                    Danh sách phim đã bookmark
-        </h1>
-        <hr />
-        {showBookmark}
-      </Layout>
-    </div>
+    <Layout>
+      <Helmet>
+        <title>Bookmark</title>
+      </Helmet>
+      <h1 className='text-center'>
+        Danh sách phim đã bookmark
+      </h1>
+      <hr />
+      {showBookmark}
+    </Layout>
+
   )
 }
 export default Bookmark

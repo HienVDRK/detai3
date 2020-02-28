@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import Layout from '../src/layouts/DefaultLayout'
-import { getFilmsByTitle } from '../src/service/service'
+import { getFilmsByTitleandYear } from '../src/service/service'
 import ListFilm from '../src/components/ListFilms'
+import { Helmet } from 'react-helmet'
 
 class Search extends Component {
   constructor (props) {
     super(props)
-    this.state = { txtTitleFilm: '', fetchData: '' }
+    this.state = { txtTitleFilm: '', txtYearRelease: '', fetchData: '' }
   }
 
   handleOnChange = (event) => {
@@ -20,12 +21,17 @@ class Search extends Component {
 
   handleOnSubmit = (event) => {
     event.preventDefault()
-    this.searchFilms()
+    if (this.state.txtTitleFilm) {
+      this.searchFilms()
+    } else {
+      window.alert('Phải nhập tiêu đề phim!')
+    }
   }
 
   searchFilms = async () => {
-    const keyWord = this.state.txtTitleFilm
-    const films = await getFilmsByTitle(keyWord)
+    const title = this.state.txtTitleFilm
+    const year = this.state.txtYearRelease
+    const films = await getFilmsByTitleandYear(title, year)
     this.setState({ fetchData: films })
   }
 
@@ -54,28 +60,50 @@ class Search extends Component {
     }
 
     return (
-      <Layout>
-        <h1 className='text-center'>
-          Trang tìm kiếm phim
-        </h1>
-        <hr />
-        <form onSubmit={this.handleOnSubmit}>
-          <div className='form-group'>
-            <label>Tiêu đề phim</label>
-            <input
-              type='text'
-              name='txtTitleFilm'
-              onChange={this.handleOnChange}
-              value={this.state.txtTitleFilm}
-              className='form-control'
-              placeholder='Nhập tiêu đề phim'
-            />
-          </div>
-          <button type='submit' className='btn btn-primary'>Tìm kiếm</button>
-        </form>
-        <br />
-        {showFilm}
-      </Layout>
+      <div>
+        <Helmet>
+          <title>Tìm kiếm</title>
+        </Helmet>
+        <Layout>
+          <h1 className='text-center'>
+            Trang tìm kiếm phim
+          </h1>
+          <hr />
+          <form onSubmit={this.handleOnSubmit}>
+            <div class='row'>
+              <div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
+                <div className='form-group'>
+                  <label>Tiêu đề phim</label>
+                  <input
+                    type='text'
+                    name='txtTitleFilm'
+                    onChange={this.handleOnChange}
+                    value={this.state.txtTitleFilm}
+                    className='form-control'
+                    placeholder='Nhập tiêu đề phim'
+                  />
+                </div>
+              </div>
+              <div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
+                <div className='form-group'>
+                  <label>Năm phát hành </label>
+                  <input
+                    type='text'
+                    name='txtYearRelease'
+                    onChange={this.handleOnChange}
+                    value={this.state.txtYearRelease}
+                    className='form-control'
+                    placeholder='Nhập năm phát hành'
+                  />
+                </div>
+              </div>
+            </div>
+            <button type='submit' className='btn btn-primary'>Tìm kiếm</button>
+          </form>
+          <br />
+          {showFilm}
+        </Layout>
+      </div>
     )
   }
 }

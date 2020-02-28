@@ -4,7 +4,7 @@ function Footer () {
   return (
     <div className={styles.div}>
       <h4 className={styles.footer}>
-        Đề Tài 3 - Tìm kiếm phim trên trang IMDB <br />
+        Tìm kiếm phim trên trang IMDB <br />
         Copyright: "(c) 2020 Rikkeisoft"
       </h4>
     </div>
