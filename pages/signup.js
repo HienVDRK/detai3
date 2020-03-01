@@ -15,6 +15,10 @@ class SignUp extends Component {
         this.setState({
           account
         })
+      } else {
+        this.setState({
+          account: []
+        })
       }
     }
   }
