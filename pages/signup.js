@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Layout from '../src/layouts/DefaultLayout'
 import Helmet from 'react-helmet'
+import Layout from '../src/layouts/DefaultLayout'
 
 class SignUp extends Component {
   constructor (props) {
@@ -38,76 +38,84 @@ class SignUp extends Component {
     const passWord = this.state.txtPassword
     const rePassword = this.state.txtRePassword
     if (userName && passWord && rePassword) {
-      if (passWord !== rePassword) {
-        window.alert('Nhập lại mật khẩu không khớp')
+      const accounts = JSON.parse(window.localStorage.getItem('account'))
+      const checkExistUsername = (accounts && accounts.some(account => account.username === userName))
+      if (checkExistUsername) {
+        window.alert('Tên tài khoản đã tồn tại!')
+      } else if (passWord !== rePassword) {
+        window.alert('Nhập lại mật khẩu không khớp!')
       } else {
         this.state.account.push({
           username: this.state.txtUsername,
           password: this.state.txtPassword
         })
-        console.log('objAccount', this.state.account)
         window.localStorage.setItem('account', JSON.stringify(this.state.account))
-        window.alert('Đăng kí thành công')
+        window.alert('Đăng ký thành công!')
       }
     } else {
-      window.alert('Nhập đầy đủ thông tin đăng kí!')
+      window.alert('Nhập đầy đủ thông tin đăng ký!')
     }
   }
 
   render () {
-    console.log('123', this.state.account)
     return (
       <Layout>
         <Helmet>
-          <title>Đăng kí</title>
+          <title>Đăng ký</title>
         </Helmet>
-        <h2>Đăng kí</h2>
-        <form onSubmit={this.handleSubmitDangKy} className='form-horizontal'>
-          <div className='form-group'>
-            <div className='col-sm-12'>
-              <label>Username:</label>
-              <input
-                type='text'
-                onChange={this.handleOnChange}
-                value={this.state.txtUsername}
-                className='form-control'
-                placeholder='Nhập username'
-                name='txtUsername'
-              />
-            </div>
+        <div className='row'>
+          <div className='col-sm-3 col-md-3 col-lg-3' />
+          <div className='col-sm-6 col-md-6 col-lg-6'>
+            <form onSubmit={this.handleSubmitDangKy} className='form-horizontal'>
+              <h2>Đăng ký</h2>
+              <div className='form-group'>
+                <div className='col-sm-12'>
+                  <label>Username:</label>
+                  <input
+                    type='text'
+                    onChange={this.handleOnChange}
+                    value={this.state.txtUsername}
+                    className='form-control'
+                    placeholder='Nhập username'
+                    name='txtUsername'
+                  />
+                </div>
+              </div>
+              <div className='form-group'>
+                <div className='col-sm-12'>
+                  <label>Mật khẩu:</label>
+                  <input
+                    type='password'
+                    onChange={this.handleOnChange}
+                    value={this.state.txtPassword}
+                    className='form-control'
+                    placeholder='Nhập mật khẩu'
+                    name='txtPassword'
+                  />
+                </div>
+              </div>
+              <div className='form-group'>
+                <div className='col-sm-12'>
+                  <label>Nhập lại mật khẩu:</label>
+                  <input
+                    type='password'
+                    onChange={this.handleOnChange}
+                    value={this.state.txtRePassword}
+                    className='form-control'
+                    placeholder='Nhập lại mật khẩu'
+                    name='txtRePassword'
+                  />
+                </div>
+              </div>
+              <div className='form-group'>
+                <div className='col-sm-12'>
+                  <button type='submit' className='btn btn-primary'>Đăng ký</button>
+                </div>
+              </div>
+            </form>
           </div>
-          <div className='form-group'>
-            <div className='col-sm-12'>
-              <label>Mật khẩu:</label>
-              <input
-                type='password'
-                onChange={this.handleOnChange}
-                value={this.state.txtPassword}
-                className='form-control'
-                placeholder='Nhập mật khẩu'
-                name='txtPassword'
-              />
-            </div>
-          </div>
-          <div className='form-group'>
-            <div className='col-sm-12'>
-              <label>Nhập lại mật khẩu:</label>
-              <input
-                type='password'
-                onChange={this.handleOnChange}
-                value={this.state.txtRePassword}
-                className='form-control'
-                placeholder='Nhập lại mật khẩu'
-                name='txtRePassword'
-              />
-            </div>
-          </div>
-          <div className='form-group'>
-            <div className='col-sm-12'>
-              <button type='submit' className='btn btn-primary'>Đăng kí</button>
-            </div>
-          </div>
-        </form>
+          <div className='col-sm-3 col-md-3 col-lg-3' />
+        </div>
       </Layout>
     )
   }

@@ -1,6 +1,6 @@
 .poster{
-    height: 350px;
-    width: 250px;
+    height: 75%;
+    width: 100%;
     cursor: pointer
 }
 .titleFilm{
@@ -10,6 +10,7 @@
 .infoFilm{
     height: 490px
 }
+
 .textFilm{
-    height: 100px
+    height: 25%
 }

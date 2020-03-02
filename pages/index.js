@@ -15,7 +15,7 @@ function Index (props) {
       </Link>
       <br />
       <div className='row'>
-        <div className='col-xs-3 col-sm-3 col-md-3 col-lg-3'>
+        <div className='col-sm-12 col-md-12 col-lg-12'>
           <h4>Các bộ phim hiện có: {props.data.Search.length}</h4>
         </div>
       </div>

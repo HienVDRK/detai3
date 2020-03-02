@@ -6,10 +6,9 @@
 .imgPoster{
     height: 465px !important;
     display: block;
-    max-width: 100%
+    width: 100%
 }
 .videoTrailer{
-    border: 1px solid red;
     height: 465px
 }
 

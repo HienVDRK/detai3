@@ -7,7 +7,7 @@
     "test": "standard",
     "dev": "node server.js",
     "build": "next build",
-    "start": "next start -p $PORT"
+    "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -23,7 +23,8 @@
     "react-helmet": "^5.2.1",
     "react-youtube": "^7.9.0",
     "standard": "^14.3.1",
-    "universal-cookie": "^4.0.3"
+    "universal-cookie": "^4.0.3",
+    "youtube-api-search": "^0.0.5"
   },
   "standard": {
     "parser": "babel-eslint"

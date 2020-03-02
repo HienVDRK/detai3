@@ -32,7 +32,11 @@ class Search extends Component {
     const title = this.state.txtTitleFilm
     const year = this.state.txtYearRelease
     const films = await getFilmsByTitleandYear(title, year)
-    this.setState({ fetchData: films })
+    if (films.Response === 'False' && films.Error === 'Too many results.') {
+      window.alert('Có quá nhiều kết quả để hiển thị!')
+    } else {
+      this.setState({ fetchData: films })
+    }
   }
 
   render () {
@@ -46,7 +50,7 @@ class Search extends Component {
       showFilm = (
         <div>
           <div className='row'>
-            <div className='col-xs-3 col-sm-3 col-md-3 col-lg-3'>
+            <div className='col-sm-12 col-md-12 col-lg-12'>
               <h4>Số kết quả tìm được: {data.Search.length}</h4>
             </div>
           </div>
@@ -70,8 +74,8 @@ class Search extends Component {
           </h1>
           <hr />
           <form onSubmit={this.handleOnSubmit}>
-            <div class='row'>
-              <div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
+            <div className='row'>
+              <div className='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
                 <div className='form-group'>
                   <label>Tiêu đề phim</label>
                   <input
@@ -84,11 +88,12 @@ class Search extends Component {
                   />
                 </div>
               </div>
-              <div class='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
+              <div className='col-xs-6 col-sm-6 col-md-6 col-lg-6'>
                 <div className='form-group'>
                   <label>Năm phát hành </label>
                   <input
-                    type='text'
+                    type='number'
+                    min='0'
                     name='txtYearRelease'
                     onChange={this.handleOnChange}
                     value={this.state.txtYearRelease}
