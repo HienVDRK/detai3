@@ -11,9 +11,10 @@ class Search extends Component {
   }
 
   handleOnChange = (event) => {
-    const target = event.target
-    const name = target.name
-    const value = target.value
+    const { name, value } = event.target
+    // const target = event.target
+    // const name = target.name
+    // const value = target.value
     this.setState({
       [name]: value
     })

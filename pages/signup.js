@@ -1,44 +1,38 @@
 import React, { Component } from 'react'
 import Helmet from 'react-helmet'
+import Cookies from 'universal-cookie'
 import Layout from '../src/layouts/DefaultLayout'
+const cookies = new Cookies()
 
 class SignUp extends Component {
   constructor (props) {
     super(props)
-    this.state = { txtUsername: '', txtPassword: '', txtRePassword: '', account: '' }
+    this.state = { txtUsername: '', txtPassword: '', txtRePassword: '', account: [] }
   }
 
   componentDidMount () {
-    if (typeof window !== 'undefined') {
-      const account = JSON.parse(window.localStorage.getItem('account'))
-      if (account) {
-        this.setState({
-          account
-        })
-      } else {
-        this.setState({
-          account: []
-        })
-      }
+    const account = cookies.get('accounts')
+    if (account) {
+      this.setState({
+        account
+      })
     }
   }
 
   handleOnChange = (event) => {
-    const target = event.target
-    const name = target.name
-    const value = target.value
+    const { name, value } = event.target
     this.setState({
       [name]: value
     })
   }
 
-  handleSubmitDangKy = (event) => {
+  handleSubmitSignUp = (event) => {
     event.preventDefault()
     const userName = this.state.txtUsername
     const passWord = this.state.txtPassword
     const rePassword = this.state.txtRePassword
     if (userName && passWord && rePassword) {
-      const accounts = JSON.parse(window.localStorage.getItem('account'))
+      const accounts = cookies.get('accounts')
       const checkExistUsername = (accounts && accounts.some(account => account.username === userName))
       if (checkExistUsername) {
         window.alert('Tên tài khoản đã tồn tại!')
@@ -49,7 +43,7 @@ class SignUp extends Component {
           username: this.state.txtUsername,
           password: this.state.txtPassword
         })
-        window.localStorage.setItem('account', JSON.stringify(this.state.account))
+        cookies.set('accounts', JSON.stringify(this.state.account))
         window.alert('Đăng ký thành công!')
       }
     } else {
@@ -66,7 +60,7 @@ class SignUp extends Component {
         <div className='row'>
           <div className='col-sm-3 col-md-3 col-lg-3' />
           <div className='col-sm-6 col-md-6 col-lg-6'>
-            <form onSubmit={this.handleSubmitDangKy} className='form-horizontal'>
+            <form onSubmit={this.handleSubmitSignUp} className='form-horizontal'>
               <h2>Đăng ký</h2>
               <div className='form-group'>
                 <div className='col-sm-12'>

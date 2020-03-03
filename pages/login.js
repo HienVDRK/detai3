@@ -1,37 +1,36 @@
 import React, { Component } from 'react'
 import Helmet from 'react-helmet'
+import Cookies from 'universal-cookie'
 import Layout from '../src/layouts/DefaultLayout'
+const cookies = new Cookies()
 
 class Login extends Component {
   constructor (props) {
     super(props)
-    this.state = { txtUsername: '', txtPassword: '', accCurrentLogged: [] }
+    this.state = { txtUsername: '', txtPassword: '', user: [] }
   }
 
-  handleSubmitDangNhap = (event) => {
+  handleSubmitLogin = (event) => {
     event.preventDefault()
-    const userName = this.state.txtUsername
-    const passWord = this.state.txtPassword
-    const getAccount = JSON.parse(window.localStorage.getItem('account'))
-    console.log(getAccount)
-    if (userName === '' || passWord === '') {
+    const { txtUsername, txtPassword, user } = this.state
+    const getAccount = cookies.get('accounts')
+    if (txtUsername === '' || txtPassword === '') {
       window.alert('Nhập tên tài khoản và mật khẩu để đăng nhập!')
-    } else if (getAccount && getAccount.some(account => account.username === userName && account.password === passWord)) {
-      this.state.accCurrentLogged.push({
+    } else if (getAccount && getAccount.some(account => account.username === txtUsername && account.password === txtPassword)) {
+      user.push({
         username: this.state.txtUsername,
         password: this.state.txtPassword
       })
-      window.localStorage.setItem('accCurrentLogged', JSON.stringify(this.state.accCurrentLogged))
+      cookies.set('user', JSON.stringify(user))
       window.alert('Đăng nhập thành công!')
+      window.location.reload()
     } else {
       window.alert('Lỗi: Sai tên tài khoản hoặc mật khẩu!')
     }
   }
 
   handleOnChange = (event) => {
-    const target = event.target
-    const name = target.name
-    const value = target.value
+    const { name, value } = event.target
     this.setState({
       [name]: value
     })
@@ -47,7 +46,7 @@ class Login extends Component {
           <div className='col-sm-3 col-md-3 col-lg-3' />
           <div className='col-sm-6 col-md-6 col-lg-6'>
             <h2>Đăng nhập</h2>
-            <form onSubmit={this.handleSubmitDangNhap} className='form-horizontal'>
+            <form onSubmit={this.handleSubmitLogin} className='form-horizontal'>
               <div className='form-group'>
                 <div className='col-sm-12'>
                   <label>Username:</label>

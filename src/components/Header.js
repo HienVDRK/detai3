@@ -1,28 +1,42 @@
 import Header from 'next/head'
 import Link from 'next/link'
+import Cookies from 'universal-cookie'
 
 function Head () {
   let btnLogin
+  let btnSignup
+  let btnBookmark
+  const cookies = new Cookies()
 
   const handleOnLogout = function (event) {
     event.preventDefault()
-    window.localStorage.removeItem('accCurrentLogged')
+    cookies.remove('user')
     window.alert('Đăng xuất thành công')
+    window.location.reload()
   }
 
-  if (typeof window !== 'undefined') {
-    if (window.localStorage.getItem('accCurrentLogged')) {
-      btnLogin = (
-        <a href='#' onClick={handleOnLogout}><span className='glyphicon glyphicon-log-out' /> {JSON.parse(window.localStorage.getItem('accCurrentLogged'))[0].username}</a>
-      )
-    } else {
-      btnLogin = (
-        <Link href='/login'>
-          <a href='#'><span className='glyphicon glyphicon-log-in' /> Login</a>
-        </Link>
-      )
-    }
+  if (cookies.get('user')) {
+    btnBookmark = (
+      <Link href='/bookmark'>
+        <a href='#'>Bookmark</a>
+      </Link>
+    )
+    btnLogin = (
+      <a href='#' onClick={handleOnLogout}><span className='glyphicon glyphicon-log-out' /> {(cookies.get('user'))[0].username}</a>
+    )
+  } else {
+    btnLogin = (
+      <Link href='/login'>
+        <a href='#'><span className='glyphicon glyphicon-log-in' /> Login</a>
+      </Link>
+    )
+    btnSignup = (
+      <Link href='/signup'>
+        <a href='#'><span className='glyphicon glyphicon-user' /> Sign Up</a>
+      </Link>
+    )
   }
+
   return (
     <div>
       <Header>
@@ -46,9 +60,7 @@ function Head () {
           <div className='collapse navbar-collapse' id='myNavbar'>
             <ul className='nav navbar-nav'>
               <li>
-                <Link href='/bookmark'>
-                  <a href='#'>Bookmark</a>
-                </Link>
+                {btnBookmark}
               </li>
               <li>
                 <Link href='/about'>
@@ -58,9 +70,7 @@ function Head () {
             </ul>
             <ul className='nav navbar-nav navbar-right'>
               <li>
-                <Link href='/signup'>
-                  <a href='#'><span className='glyphicon glyphicon-user' /> Sign Up</a>
-                </Link>
+                {btnSignup}
               </li>
               <li>
                 {btnLogin}

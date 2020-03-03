@@ -37,7 +37,7 @@ function Detail (props) {
   }
 
   const addBookmark = function () {
-    const getAccount = JSON.parse(window.localStorage.getItem('accCurrentLogged'))
+    const getAccount = cookies.get('user')
     if (getAccount) {
       if (cookies.get('bookmark') === undefined) {
         bookmarkFilm = []
@@ -64,31 +64,16 @@ function Detail (props) {
   }
 
   const removeBookmark = function () {
-    const getAccount = JSON.parse(window.localStorage.getItem('accCurrentLogged'))
+    const getAccount = cookies.get('accCurrentLogged')
     if (getAccount) {
       const getBookmarkFilm = cookies.get('bookmark')
       const index = getBookmarkFilm.findIndex(film => film.imdbID === props.data.imdbID)
       getBookmarkFilm.splice(index, 1)
-      const jsonStr = JSON.stringify(getBookmarkFilm)
-      cookies.set('bookmark', jsonStr)
+      cookies.set('bookmark', JSON.stringify(getBookmarkFilm))
       window.alert(`Xóa bookmark ${props.data.Title} thành công!`)
     } else {
       window.alert('Đăng nhập trước khi xóa phim khỏi bookmark!')
     }
-  }
-
-  if (cookies.get('bookmark') && cookies.get('bookmark').some(film => film.imdbID === props.data.imdbID)) {
-    btnBookmark = (
-      <div>
-        <button type='button' onClick={removeBookmark} className='btn btn-danger btn-lg'>Xóa Bookmark</button>
-      </div>
-    )
-  } else {
-    btnBookmark = (
-      <div>
-        <button type='button' onClick={addBookmark} className='btn btn-success btn-lg' value=''>Thêm Bookmark</button>
-      </div>
-    )
   }
 
   if (props.data.Poster === 'N/A') {
@@ -101,6 +86,22 @@ function Detail (props) {
     ratings = props.data.Ratings[0].Value
   } else {
     ratings = null
+  }
+
+  if (cookies.get('user')) {
+    if (cookies.get('bookmark') && cookies.get('bookmark').some(film => film.imdbID === props.data.imdbID)) {
+      btnBookmark = (
+        <div>
+          <button type='button' onClick={removeBookmark} className='btn btn-danger btn-lg'>Xóa Bookmark</button>
+        </div>
+      )
+    } else {
+      btnBookmark = (
+        <div>
+          <button type='button' onClick={addBookmark} className='btn btn-success btn-lg' value=''>Thêm Bookmark</button>
+        </div>
+      )
+    }
   }
 
   return (
