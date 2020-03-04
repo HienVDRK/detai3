@@ -64,7 +64,7 @@ function Detail (props) {
   }
 
   const removeBookmark = function () {
-    const getAccount = cookies.get('accCurrentLogged')
+    const getAccount = cookies.get('user')
     if (getAccount) {
       const getBookmarkFilm = cookies.get('bookmark')
       const index = getBookmarkFilm.findIndex(film => film.imdbID === props.data.imdbID)
