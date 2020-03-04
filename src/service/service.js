@@ -2,7 +2,6 @@
 import getConfig from 'next/config'
 import axiosConfig from '../../axiosConfig'
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
-console.log(serverRuntimeConfig.APIKEY)
 
 export const getFilmsByTitle = async (keyWord) => {
   const response = await axiosConfig.get(`/?s=${keyWord}&apikey=${publicRuntimeConfig.APIKEY}`)

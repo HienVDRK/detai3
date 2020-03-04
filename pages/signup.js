@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
-import Cookies from 'universal-cookie'
 import Layout from '../src/layouts/DefaultLayout'
-const cookies = new Cookies()
+import { getUser, setUser } from '../src/models/user'
+const getUsers = getUser(0)
 
 class SignUp extends Component {
   constructor (props) {
     super(props)
-    this.state = { txtUsername: '', txtPassword: '', txtRePassword: '', account: [] }
+    this.state = { username: '', password: '', passwordConfirmation: '', accounts: [] }
   }
 
   componentDidMount () {
-    const account = cookies.get('accounts')
-    if (account) {
+    if (getUsers) {
       this.setState({
-        account
+        accounts: getUsers
       })
     }
   }
@@ -26,29 +25,27 @@ class SignUp extends Component {
     })
   }
 
-  handleSubmitSignUp = (event) => {
-    event.preventDefault()
-    const userName = this.state.txtUsername
-    const passWord = this.state.txtPassword
-    const rePassword = this.state.txtRePassword
-    if (userName && passWord && rePassword) {
-      const accounts = cookies.get('accounts')
-      const checkExistUsername = (accounts && accounts.some(account => account.username === userName))
-      if (checkExistUsername) {
+  checkSignUp = () => {
+    const { username, password, passwordConfirmation, accounts } = this.state
+    if (username && password && passwordConfirmation) {
+      const checkExist = (getUsers && getUsers.some(user => user.username === username))
+      if (checkExist) {
         window.alert('Tên tài khoản đã tồn tại!')
-      } else if (passWord !== rePassword) {
+      } else if (password !== passwordConfirmation) {
         window.alert('Nhập lại mật khẩu không khớp!')
       } else {
-        this.state.account.push({
-          username: this.state.txtUsername,
-          password: this.state.txtPassword
-        })
-        cookies.set('accounts', JSON.stringify(this.state.account))
+        setUser(username, password, accounts, 0)
+        window.location.reload()
         window.alert('Đăng ký thành công!')
       }
     } else {
       window.alert('Nhập đầy đủ thông tin đăng ký!')
     }
+  }
+
+  handleOnSignUp = (event) => {
+    event.preventDefault()
+    this.checkSignUp()
   }
 
   render () {
@@ -58,9 +55,8 @@ class SignUp extends Component {
           <title>Đăng ký</title>
         </Head>
         <div className='row'>
-          <div className='col-sm-3 col-md-3 col-lg-3' />
-          <div className='col-sm-6 col-md-6 col-lg-6'>
-            <form onSubmit={this.handleSubmitSignUp} className='form-horizontal'>
+          <div className='col-sm-6 col-sm-offset-3 col-md-6 col-lg-6 col-md-offset-3 col-lg-6 col-lg-offset-3'>
+            <form onSubmit={this.handleOnSignUp} className='form-horizontal'>
               <h2>Đăng ký</h2>
               <div className='form-group'>
                 <div className='col-sm-12'>
@@ -68,10 +64,10 @@ class SignUp extends Component {
                   <input
                     type='text'
                     onChange={this.handleOnChange}
-                    value={this.state.txtUsername}
+                    value={this.state.username}
                     className='form-control'
                     placeholder='Nhập username'
-                    name='txtUsername'
+                    name='username'
                   />
                 </div>
               </div>
@@ -81,10 +77,10 @@ class SignUp extends Component {
                   <input
                     type='password'
                     onChange={this.handleOnChange}
-                    value={this.state.txtPassword}
+                    value={this.state.password}
                     className='form-control'
                     placeholder='Nhập mật khẩu'
-                    name='txtPassword'
+                    name='password'
                   />
                 </div>
               </div>
@@ -94,10 +90,10 @@ class SignUp extends Component {
                   <input
                     type='password'
                     onChange={this.handleOnChange}
-                    value={this.state.txtRePassword}
+                    value={this.state.passwordConfirmation}
                     className='form-control'
                     placeholder='Nhập lại mật khẩu'
-                    name='txtRePassword'
+                    name='passwordConfirmation'
                   />
                 </div>
               </div>
@@ -108,7 +104,6 @@ class SignUp extends Component {
               </div>
             </form>
           </div>
-          <div className='col-sm-3 col-md-3 col-lg-3' />
         </div>
       </Layout>
     )

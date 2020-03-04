@@ -1,16 +1,16 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
-import Cookies from 'universal-cookie'
 import Head from 'next/head'
 import YouTube from 'react-youtube'
 import YTSearch from 'youtube-api-search'
 import Layout from '../src/layouts/DefaultLayout'
 import styles from '../src/styles/detail.module.css'
 import { getDetailFilmsById } from '../src/service/service'
+import { getBookmark, setBookmark } from '../src/models/bookmarks'
+import { getUser } from '../src/models/user'
 
 function Detail (props) {
   let btnBookmark
-  let bookmarkFilm
   let imgPoster
   let ratings
   const opts = {
@@ -20,42 +20,29 @@ function Detail (props) {
       autoplay: 0
     }
   }
-  const cookies = new Cookies()
   const API_KEY = 'AIzaSyCzHD5ojqxR8vy76ydt-3GMPExqtOZOnG4'
-  const [video, setVideo] = useState({ videoID: '' })
+  const [video, setVideo] = useState({ videoId: '' })
   const trailerFilm = `${props.data.Title} trailer`
 
-  const videoSearch = function (trailerFilm) {
+  const onFilterVideo = function (trailerFilm) {
     YTSearch({ key: API_KEY, term: trailerFilm }, (videos) => {
-      setVideo({ videoID: videos[0].id.videoId })
+      setVideo({ videoId: videos[0].id.videoId })
     })
   }
 
   const _onReady = (event) => {
-    videoSearch(trailerFilm)
+    onFilterVideo(trailerFilm)
     event.target.pauseVideo()
   }
+  const getBookmarkFilm = getBookmark()
+  const getUserLogin = getUser(1)
 
   const addBookmark = function () {
-    const getAccount = cookies.get('user')
-    if (getAccount) {
-      if (cookies.get('bookmark') === undefined) {
-        bookmarkFilm = []
-      } else {
-        bookmarkFilm = cookies.get('bookmark')
-      }
-      if (bookmarkFilm && bookmarkFilm.some(film => film.imdbID === props.data.imdbID)) {
+    if (getUserLogin) {
+      if (getBookmarkFilm && getBookmarkFilm.some(film => film.imdbID === props.data.imdbID)) {
         window.alert(`Phim ${props.data.Title} đã bookmark rồi!`)
       } else {
-        bookmarkFilm.push({
-          imdbID: props.data.imdbID,
-          Title: props.data.Title,
-          Poster: props.data.Poster,
-          Year: props.data.Year,
-          Type: props.data.Type
-        })
-        const jsonStr = JSON.stringify(bookmarkFilm)
-        cookies.set('bookmark', jsonStr)
+        setBookmark(props, getBookmarkFilm)
         window.alert(`Thêm bookmark ${props.data.Title} thành công!`)
       }
     } else {
@@ -64,12 +51,10 @@ function Detail (props) {
   }
 
   const removeBookmark = function () {
-    const getAccount = cookies.get('user')
-    if (getAccount) {
-      const getBookmarkFilm = cookies.get('bookmark')
+    if (getUserLogin) {
       const index = getBookmarkFilm.findIndex(film => film.imdbID === props.data.imdbID)
       getBookmarkFilm.splice(index, 1)
-      cookies.set('bookmark', JSON.stringify(getBookmarkFilm))
+      setBookmark('', getBookmarkFilm)
       window.alert(`Xóa bookmark ${props.data.Title} thành công!`)
     } else {
       window.alert('Đăng nhập trước khi xóa phim khỏi bookmark!')
@@ -88,8 +73,8 @@ function Detail (props) {
     ratings = null
   }
 
-  if (cookies.get('user')) {
-    if (cookies.get('bookmark') && cookies.get('bookmark').some(film => film.imdbID === props.data.imdbID)) {
+  if (getUserLogin) {
+    if (getBookmarkFilm && getBookmarkFilm.some(film => film.imdbID === props.data.imdbID)) {
       btnBookmark = (
         <div>
           <button type='button' onClick={removeBookmark} className='btn btn-danger btn-lg'>Xóa Bookmark</button>
@@ -136,7 +121,7 @@ function Detail (props) {
           <div className='col-sm-8 col-md-8 col-lg-8'>
             <div className={styles.videoTrailer}>
               <YouTube
-                videoId={video.videoID}
+                videoId={video.videoId}
                 opts={opts}
                 onReady={_onReady}
               />
@@ -160,10 +145,10 @@ function Detail (props) {
   )
 }
 
-Detail.getInitialProps = async ({ query: { idFilm } }) => {
-  const getFilms = await getDetailFilmsById(idFilm)
+Detail.getInitialProps = async ({ query: { filmId } }) => {
+  const film = await getDetailFilmsById(filmId)
   return {
-    data: getFilms
+    data: film
   }
 }
 

@@ -9,8 +9,8 @@ app.prepare()
   .then(() => {
     const server = express()
 
-    server.get('/detail/:idFilm', (req, res) => {
-      app.render(req, res, '/detail', { idFilm: req.params.idFilm })
+    server.get('/detail/:filmId', (req, res) => {
+      app.render(req, res, '/detail', { filmId: req.params.filmId })
     })
     server.get('/bookmark', (req, res) => {
       return app.render(req, res, '/bookmark')

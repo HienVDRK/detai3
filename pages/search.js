@@ -7,14 +7,15 @@ import ListFilm from '../src/components/ListFilms'
 class Search extends Component {
   constructor (props) {
     super(props)
-    this.state = { txtTitleFilm: '', txtYearRelease: '', fetchData: '' }
+    this.state = {
+      filmTitle: '',
+      yearRelease: '',
+      filmFilters: []
+    }
   }
 
   handleOnChange = (event) => {
     const { name, value } = event.target
-    // const target = event.target
-    // const name = target.name
-    // const value = target.value
     this.setState({
       [name]: value
     })
@@ -22,7 +23,7 @@ class Search extends Component {
 
   handleOnSubmit = (event) => {
     event.preventDefault()
-    if (this.state.txtTitleFilm) {
+    if (this.state.filmTitle) {
       this.searchFilms()
     } else {
       window.alert('Phải nhập tiêu đề phim!')
@@ -30,25 +31,28 @@ class Search extends Component {
   }
 
   searchFilms = async () => {
-    const title = this.state.txtTitleFilm
-    const year = this.state.txtYearRelease
-    const films = await getFilmsByTitleandYear(title, year)
+    const { filmTitle, yearRelease } = this.state
+    const films = await getFilmsByTitleandYear(filmTitle, yearRelease)
     if (films.Response === 'False' && films.Error === 'Too many results.') {
       window.alert('Có quá nhiều kết quả để hiển thị!')
+    } else if (films.Response === 'False' && films.Error === 'Movie not found!') {
+      window.alert('Không tìm thấy bộ phim nào!')
     } else {
-      this.setState({ fetchData: films })
+      this.setState({ filmFilters: films })
     }
   }
 
   render () {
-    const data = this.state.fetchData ? this.state.fetchData : this.props.data
-    let showFilm
-    if (data === undefined || data.Response === 'False') {
-      showFilm = (
+    const { filmFilters } = this.state
+    const data = filmFilters
+    let showListFilm
+
+    if (data === undefined || data.length === 0) {
+      showListFilm = (
         <div><h4>Không có kết quả nào được tìm thấy</h4></div>
       )
     } else {
-      showFilm = (
+      showListFilm = (
         <div>
           <div className='row'>
             <div className='col-sm-12 col-md-12 col-lg-12'>
@@ -81,9 +85,9 @@ class Search extends Component {
                   <label>Tiêu đề phim</label>
                   <input
                     type='text'
-                    name='txtTitleFilm'
+                    name='filmTitle'
                     onChange={this.handleOnChange}
-                    value={this.state.txtTitleFilm}
+                    value={this.state.filmTitle}
                     className='form-control'
                     placeholder='Nhập tiêu đề phim'
                   />
@@ -95,9 +99,9 @@ class Search extends Component {
                   <input
                     type='number'
                     min='0'
-                    name='txtYearRelease'
+                    name='yearRelease'
                     onChange={this.handleOnChange}
-                    value={this.state.txtYearRelease}
+                    value={this.state.yearRelease}
                     className='form-control'
                     placeholder='Nhập năm phát hành'
                   />
@@ -107,7 +111,7 @@ class Search extends Component {
             <button type='submit' className='btn btn-primary'>Tìm kiếm</button>
           </form>
           <br />
-          {showFilm}
+          {showListFilm}
         </Layout>
       </div>
     )

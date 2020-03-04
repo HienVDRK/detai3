@@ -1,50 +1,54 @@
-import Header from 'next/head'
+import Head from 'next/head'
 import Link from 'next/link'
-import Cookies from 'universal-cookie'
+import { getUser, removeUser } from '../models/user'
 
-function Head () {
+function Header () {
   let btnLogin
   let btnSignup
   let btnBookmark
-  const cookies = new Cookies()
+  const getUserLogin = getUser(1)
 
   const handleOnLogout = function (event) {
     event.preventDefault()
-    cookies.remove('user')
+    removeUser()
     window.alert('Đăng xuất thành công')
     window.location.reload()
   }
 
-  if (cookies.get('user')) {
+  if (getUserLogin) {
     btnBookmark = (
       <Link href='/bookmark'>
         <a href='#'>Bookmark</a>
       </Link>
     )
     btnLogin = (
-      <a href='#' onClick={handleOnLogout}><span className='glyphicon glyphicon-log-out' /> {(cookies.get('user'))[0].username}</a>
+      <a href='#' onClick={handleOnLogout}>
+        <span className='glyphicon glyphicon-log-out' /> {getUserLogin[0].username}
+      </a>
     )
   } else {
     btnLogin = (
       <Link href='/login'>
-        <a href='#'><span className='glyphicon glyphicon-log-in' /> Login</a>
+        <a href='#'><span className='glyphicon glyphicon-log-in' /> Login
+        </a>
       </Link>
     )
     btnSignup = (
       <Link href='/signup'>
-        <a href='#'><span className='glyphicon glyphicon-user' /> Sign Up</a>
+        <a href='#'><span className='glyphicon glyphicon-user' /> Sign Up
+        </a>
       </Link>
     )
   }
 
   return (
     <div>
-      <Header>
+      <Head>
         <title>Trang chủ IMDB</title>
         <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css' />
         <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js' />
         <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js' />
-      </Header>
+      </Head>
       <nav className='navbar navbar-inverse'>
         <div className='container-fluid'>
           <div className='navbar-header'>
@@ -82,4 +86,4 @@ function Head () {
     </div>
   )
 }
-export default Head
+export default Header
