@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
+import Head from 'next/head'
 import Layout from '../src/layouts/DefaultLayout'
 import { getFilmsByTitleandYear } from '../src/service/service'
 import ListFilm from '../src/components/ListFilms'
-import { Helmet } from 'react-helmet'
 
 class Search extends Component {
   constructor (props) {
@@ -66,10 +66,10 @@ class Search extends Component {
 
     return (
       <div>
-        <Helmet>
-          <title>Tìm kiếm</title>
-        </Helmet>
         <Layout>
+          <Head>
+            <title>Tìm kiếm</title>
+          </Head>
           <h1 className='text-center'>
             Trang tìm kiếm phim
           </h1>

@@ -1,7 +1,8 @@
+import Head from 'next/head'
+import Cookies from 'universal-cookie'
 import Layout from '../src/layouts/DefaultLayout'
 import ListFilm from '../src/components/ListFilms'
-import Cookies from 'universal-cookie'
-import Helmet from 'react-helmet'
+
 
 function Bookmark () {
   const cookies = new Cookies()
@@ -33,9 +34,9 @@ function Bookmark () {
 
   return (
     <Layout>
-      <Helmet>
+      <Head>
         <title>Bookmark</title>
-      </Helmet>
+      </Head>
       <h1 className='text-center'>
         Danh sách phim đã bookmark
       </h1>

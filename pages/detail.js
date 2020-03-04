@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import Cookies from 'universal-cookie'
-import Helmet from 'react-helmet'
+import Head from 'next/head'
 import YouTube from 'react-youtube'
 import YTSearch from 'youtube-api-search'
 import Layout from '../src/layouts/DefaultLayout'
@@ -106,9 +106,9 @@ function Detail (props) {
 
   return (
     <Layout>
-      <Helmet>
-        <title>Chi tiết phim</title>
-      </Helmet>
+      <Head>
+        <title>Phim : {props.data.Title}</title>
+      </Head>
       <h1 className='text-center'>
         Trang chi tiết bộ phim
       </h1>

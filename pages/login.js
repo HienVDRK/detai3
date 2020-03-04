@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Helmet from 'react-helmet'
+import Head from 'next/head'
 import Cookies from 'universal-cookie'
 import Layout from '../src/layouts/DefaultLayout'
 const cookies = new Cookies()
@@ -39,9 +39,9 @@ class Login extends Component {
   render () {
     return (
       <Layout>
-        <Helmet>
+        <Head>
           <title>Đăng nhập</title>
-        </Helmet>
+        </Head>
         <div className='row'>
           <div className='col-sm-3 col-md-3 col-lg-3' />
           <div className='col-sm-6 col-md-6 col-lg-6'>
