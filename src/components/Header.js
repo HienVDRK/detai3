@@ -8,7 +8,7 @@ function Header () {
   let btnBookmark
   const getUserLogin = getUser(1)
 
-  const handleOnLogout = function (event) {
+  const handleOnLogout = (event) => {
     event.preventDefault()
     removeUser()
     window.alert('Đăng xuất thành công')
@@ -16,6 +16,7 @@ function Header () {
   }
 
   if (getUserLogin) {
+    const showUsername = getUserLogin[0].username
     btnBookmark = (
       <Link href='/bookmark'>
         <a href='#'>Bookmark</a>
@@ -23,7 +24,7 @@ function Header () {
     )
     btnLogin = (
       <a href='#' onClick={handleOnLogout}>
-        <span className='glyphicon glyphicon-log-out' /> {getUserLogin[0].username}
+        <span className='glyphicon glyphicon-log-out' /> {showUsername}
       </a>
     )
   } else {

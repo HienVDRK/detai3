@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
+import getConfig from 'next/config'
 import YouTube from 'react-youtube'
 import YTSearch from 'youtube-api-search'
 import Layout from '../src/layouts/DefaultLayout'
@@ -10,9 +11,8 @@ import { getBookmark, setBookmark } from '../src/models/bookmarks'
 import { getUser } from '../src/models/user'
 
 function Detail (props) {
-  let btnBookmark
-  let imgPoster
-  let ratings
+  const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
+  const apiKeyYT = serverRuntimeConfig.API_KEY_YT ? serverRuntimeConfig.API_KEY_YT : publicRuntimeConfig.API_KEY_YT
   const opts = {
     height: '465',
     width: '100%',
@@ -20,12 +20,16 @@ function Detail (props) {
       autoplay: 0
     }
   }
-  const API_KEY = 'AIzaSyCzHD5ojqxR8vy76ydt-3GMPExqtOZOnG4'
   const [video, setVideo] = useState({ videoId: '' })
   const trailerFilm = `${props.data.Title} trailer`
+  const getBookmarkFilm = getBookmark()
+  const getUserLogin = getUser(1)
+  let btnBookmark
+  let imgPoster
+  let ratings
 
-  const onFilterVideo = function (trailerFilm) {
-    YTSearch({ key: API_KEY, term: trailerFilm }, (videos) => {
+  const onFilterVideo = (trailerFilm) => {
+    YTSearch({ key: apiKeyYT, term: trailerFilm }, (videos) => {
       setVideo({ videoId: videos[0].id.videoId })
     })
   }
@@ -34,10 +38,8 @@ function Detail (props) {
     onFilterVideo(trailerFilm)
     event.target.pauseVideo()
   }
-  const getBookmarkFilm = getBookmark()
-  const getUserLogin = getUser(1)
 
-  const addBookmark = function () {
+  const addBookmark = () => {
     if (getUserLogin) {
       if (getBookmarkFilm && getBookmarkFilm.some(film => film.imdbID === props.data.imdbID)) {
         window.alert(`Phim ${props.data.Title} đã bookmark rồi!`)
@@ -50,7 +52,7 @@ function Detail (props) {
     }
   }
 
-  const removeBookmark = function () {
+  const removeBookmark = () => {
     if (getUserLogin) {
       const index = getBookmarkFilm.findIndex(film => film.imdbID === props.data.imdbID)
       getBookmarkFilm.splice(index, 1)
@@ -77,13 +79,26 @@ function Detail (props) {
     if (getBookmarkFilm && getBookmarkFilm.some(film => film.imdbID === props.data.imdbID)) {
       btnBookmark = (
         <div>
-          <button type='button' onClick={removeBookmark} className='btn btn-danger btn-lg'>Xóa Bookmark</button>
+          <button
+            type='button'
+            onClick={removeBookmark}
+            className='btn btn-danger btn-lg'
+          >
+            Xóa Bookmark
+          </button>
         </div>
       )
     } else {
       btnBookmark = (
         <div>
-          <button type='button' onClick={addBookmark} className='btn btn-success btn-lg' value=''>Thêm Bookmark</button>
+          <button
+            type='button'
+            onClick={addBookmark}
+            className='btn btn-success btn-lg'
+            value=''
+          >
+            Thêm Bookmark
+          </button>
         </div>
       )
     }
@@ -99,14 +114,22 @@ function Detail (props) {
       </h1>
       <hr />
       <Link href='/search'>
-        <button type='button' className='btn btn-primary'>Quay lại trang tìm kiếm</button>
+        <button
+          type='button'
+          className='btn btn-primary'
+        >
+          Quay lại trang tìm kiếm
+        </button>
       </Link>
       <br />
       <div>
         <div className='row'>
           <div className='col-sm-10 col-md-10 col-lg-10'>
             <h1>{props.data.Title} ({props.data.Year})</h1>
-            <span>{props.data.Rated}</span> | <span>{props.data.Runtime}</span> | <span>{props.data.Genre}</span> | <span>{props.data.Released}</span>
+            <span> {props.data.Rated}</span> |
+            <span> {props.data.Runtime}</span> |
+            <span> {props.data.Genre}</span> |
+            <span> {props.data.Released}</span>
             <br />
             <br />
           </div>

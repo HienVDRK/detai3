@@ -12,12 +12,30 @@ function ListFilm (props) {
   return (
     <div className='col-sm-3 col-md-3 col-lg-3'>
       <div className={styles.infoFilm}>
-        <Link as={`/detail/${props.value.imdbID}`} href={{ pathname: '/detail', query: { filmId: `${props.value.imdbID}`, Title: `${props.value.Title}` } }}>
+        <Link
+          as={`/detail/${props.value.imdbID}`}
+          href={{
+            pathname: '/detail',
+            query: {
+              filmId: `${props.value.imdbID}`,
+              Title: `${props.value.Title}`
+            }
+          }}
+        >
           <img src={imgPoster} className={styles.poster} alt='Image' />
         </Link>
         <br />
         <div className={styles.textFilm}>
-          <Link as={`/detail/${props.value.imdbID}`} href={{ pathname: '/detail', query: { filmId: `${props.value.imdbID}`, Title: `${props.value.Title}` } }}>
+          <Link
+            as={`/detail/${props.value.imdbID}`}
+            href={{
+              pathname: '/detail',
+              query: {
+                filmId: `${props.value.imdbID}`,
+                Title: `${props.value.Title}`
+              }
+            }}
+          >
             <h4 className={styles.titleFilm}>{props.value.Title}</h4>
           </Link>
           <h5>Năm phát hành: {props.value.Year}</h5>
