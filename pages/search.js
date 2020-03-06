@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import Head from 'next/head'
+import Pagination from 'react-js-pagination'
 import Layout from '../src/layouts/DefaultLayout'
-import { getFilmsByTitleandYear } from '../src/service/service'
+import { getFilmsByTitleYearPage } from '../src/service/service'
 import ListFilm from '../src/components/ListFilms'
 
 class Search extends Component {
@@ -10,6 +11,8 @@ class Search extends Component {
     this.state = {
       filmTitle: '',
       yearRelease: '',
+      activePage: 1,
+      totalResults: 0,
       filmFilters: []
     }
   }
@@ -21,9 +24,12 @@ class Search extends Component {
     })
   }
 
-  handleOnSubmit = (event) => {
+  handleOnSubmit = async (event) => {
     event.preventDefault()
     if (this.state.filmTitle) {
+      await this.setState({
+        activePage: 1
+      })
       this.searchFilms()
     } else {
       window.alert('Phải nhập tiêu đề phim!')
@@ -31,8 +37,11 @@ class Search extends Component {
   }
 
   searchFilms = async () => {
-    const { filmTitle, yearRelease } = this.state
-    const films = await getFilmsByTitleandYear(filmTitle, yearRelease)
+    const { filmTitle, yearRelease, activePage } = this.state
+    const films = await getFilmsByTitleYearPage(filmTitle, yearRelease, activePage)
+    this.setState({
+      totalResults: Number.parseInt(films.totalResults)
+    })
     if (films.Response === 'False' && films.Error === 'Too many results.') {
       window.alert('Có quá nhiều kết quả để hiển thị!')
     } else if (films.Response === 'False' && films.Error === 'Movie not found!') {
@@ -42,21 +51,31 @@ class Search extends Component {
     }
   }
 
+  handlePageChange = async (pageNumber) => {
+    await this.setState({ activePage: pageNumber })
+    this.searchFilms()
+  }
+
   render () {
-    const { filmFilters } = this.state
+    const { filmTitle, yearRelease, activePage, filmFilters, totalResults } = this.state
     const data = filmFilters
     let showListFilm
+    let pagination
 
     if (data === undefined || data.length === 0) {
       showListFilm = (
-        <div><h4>Không có kết quả nào được tìm thấy</h4></div>
+        <div>
+          <h4>
+            Không có kết quả nào được tìm thấy
+          </h4>
+        </div>
       )
-    } else {
+    } else if (totalResults) {
       showListFilm = (
         <div>
           <div className='row'>
             <div className='col-sm-12 col-md-12 col-lg-12'>
-              <h4>Số kết quả tìm được: {data.Search.length}</h4>
+              <h4>Số kết quả tìm được: {totalResults || 0}</h4>
             </div>
           </div>
           <div className='row'>
@@ -65,6 +84,16 @@ class Search extends Component {
             ))}
           </div>
         </div>
+      )
+      pagination = (
+        <Pagination
+          hideDisabled
+          activePage={activePage}
+          itemsCountPerPage={10}
+          totalItemsCount={totalResults}
+          pageRangeDisplayed={10}
+          onChange={this.handlePageChange}
+        />
       )
     }
 
@@ -87,7 +116,7 @@ class Search extends Component {
                     type='text'
                     name='filmTitle'
                     onChange={this.handleOnChange}
-                    value={this.state.filmTitle}
+                    value={filmTitle}
                     className='form-control'
                     placeholder='Nhập tiêu đề phim'
                   />
@@ -101,7 +130,7 @@ class Search extends Component {
                     min='0'
                     name='yearRelease'
                     onChange={this.handleOnChange}
-                    value={this.state.yearRelease}
+                    value={yearRelease}
                     className='form-control'
                     placeholder='Nhập năm phát hành'
                   />
@@ -111,6 +140,7 @@ class Search extends Component {
             <button type='submit' className='btn btn-primary'>Tìm kiếm</button>
           </form>
           <br />
+          {pagination}
           {showListFilm}
         </Layout>
       </div>

@@ -14,8 +14,8 @@ export const getDetailFilmsById = async (keyWord) => {
     return response.data
   }
 }
-export const getFilmsByTitleandYear = async (title, year) => {
-  const response = await axiosConfig.get(`&s=${title}&y=${year}`)
+export const getFilmsByTitleYearPage = async (title, year, page) => {
+  const response = await axiosConfig.get(`&s=${title}&y=${year}&page=${page}`)
   if (response.data) {
     return response.data
   }
