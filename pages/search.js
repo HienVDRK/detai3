@@ -97,7 +97,7 @@ class Search extends Component {
           activePage={activePage}
           itemsCountPerPage={10}
           totalItemsCount={totalResults}
-          pageRangeDisplayed={10}
+          pageRangeDisplayed={5}
           onChange={this.handlePageChange}
         />
       )
