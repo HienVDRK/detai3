@@ -26,3 +26,9 @@ export function setBookmark (props, bookmark) {
     cookies.set('bookmarks', JSON.stringify(bookmark))
   }
 }
+
+export function deleteBookmark (props, getBookmarkFilm) {
+  const index = getBookmarkFilm.findIndex(film => film.imdbID === props.data.imdbID)
+  getBookmarkFilm.splice(index, 1)
+  cookies.set('bookmarks', JSON.stringify(getBookmarkFilm))
+}

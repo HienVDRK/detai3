@@ -7,7 +7,7 @@ import YTSearch from 'youtube-api-search'
 import Layout from '../src/layouts/DefaultLayout'
 import styles from '../src/styles/detail.module.css'
 import { getDetailFilmsById } from '../src/service/service'
-import { getBookmark, setBookmark } from '../src/models/bookmarks'
+import { getBookmark, setBookmark, deleteBookmark } from '../src/models/bookmarks'
 import { getUser } from '../src/models/user'
 
 function Detail (props) {
@@ -54,9 +54,7 @@ function Detail (props) {
 
   const removeBookmark = () => {
     if (getUserLogin) {
-      const index = getBookmarkFilm.findIndex(film => film.imdbID === props.data.imdbID)
-      getBookmarkFilm.splice(index, 1)
-      setBookmark('', getBookmarkFilm)
+      deleteBookmark(props, getBookmarkFilm)
       window.alert(`Xóa bookmark ${props.data.Title} thành công!`)
     } else {
       window.alert('Đăng nhập trước khi xóa phim khỏi bookmark!')
