@@ -4,6 +4,7 @@ import Pagination from 'react-js-pagination'
 import Layout from '../src/layouts/DefaultLayout'
 import { getFilmsByTitleYearPage } from '../src/service/service'
 import ListFilm from '../src/components/ListFilms'
+import { setLatestSearch } from '../src/models/latestsearch'
 
 class Search extends Component {
   constructor (props) {
@@ -26,7 +27,8 @@ class Search extends Component {
 
   handleOnSubmit = async (event) => {
     event.preventDefault()
-    if (this.state.filmTitle) {
+    const { filmTitle } = this.state
+    if (filmTitle) {
       await this.setState({
         activePage: 1
       })
@@ -47,6 +49,10 @@ class Search extends Component {
     } else if (films.Response === 'False' && films.Error === 'Movie not found!') {
       window.alert('Không tìm thấy bộ phim nào!')
     } else {
+      const objLatestSearch = {
+        filmTitle, yearRelease
+      }
+      setLatestSearch(objLatestSearch)
       this.setState({ filmFilters: films })
     }
   }
